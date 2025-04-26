@@ -30,7 +30,23 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
+
+    const usersCollection = client.db("crudDB").collection("users")
+   
+    app.post('/users', async(req, res)=>{
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result)
+
+    })
+
+    app.get('/users', async(req, res)=>{
+      const cursor = usersCollection.find();
+      const result = await cursor.toArray() ;
+      res.send(result)
+    })
+
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
